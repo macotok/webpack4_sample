@@ -1,5 +1,7 @@
 const path = require('path');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const ImageminPlugin = require('imagemin-webpack-plugin').default;
 
 module.exports = [
   {
@@ -40,14 +42,24 @@ module.exports = [
             loader: 'postcss-loader',
             options: {
               plugins: [
-                require('autoprefixer')({
-                  browsers: ['last 2 versions', 'Android >= 4'],
-                }),
+                require('autoprefixer')(
+                  {
+                    browsers: ['last 2 versions', 'Android >= 4'],
+                  },
+                ),
               ],
             },
           }, {
             loader: 'sass-loader',
           }],
+        },
+        {
+          test: /\.(jpe?g|png|gif|woff|woff2|eot|ttf|svg)(\?[a-z0-9=.]+)?$/,
+          use: [
+            {
+              loader: 'url-loader?limit=100000&name=img/[name].[ext]',
+            },
+          ],
         },
       ],
     },
@@ -55,8 +67,20 @@ module.exports = [
       extensions: ['.js'],
     },
     plugins: [
+      new CopyWebpackPlugin([
+        {
+          from: path.resolve(__dirname, 'src/img/'),
+          to: path.resolve(__dirname, 'dist/img/'),
+        },
+      ]),
       new MiniCssExtractPlugin({
         filename: 'css/style.css',
+      }),
+      new ImageminPlugin({
+        test: /\.(jpe?g|png|gif|svg)$/i,
+        pngquant: {
+          quality: '95-100',
+        },
       }),
     ],
   },
