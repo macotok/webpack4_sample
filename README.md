@@ -3,6 +3,7 @@
 - es6の記述をbabelでes5に変換
 - sassファイルをcssに変換
 - postcssのautoprefixでprefixを作成
+- css、jsファイルをbuildでminify
 - imgファイルを圧縮
 - eslint導入
 - devServerでlocal作業
