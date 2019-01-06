@@ -1,7 +1,10 @@
 const path = require('path');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const ImageminPlugin = require('imagemin-webpack-plugin').default;
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+const AutoPrefixer = require('autoprefixer');
 
 module.exports = [
   {
@@ -42,7 +45,7 @@ module.exports = [
             loader: 'postcss-loader',
             options: {
               plugins: [
-                require('autoprefixer')(
+                AutoPrefixer(
                   {
                     browsers: ['last 2 versions', 'Android >= 4'],
                   },
@@ -61,6 +64,12 @@ module.exports = [
             },
           ],
         },
+      ],
+    },
+    optimization: {
+      minimizer: [
+        new OptimizeCSSAssetsPlugin(),
+        new UglifyJsPlugin(),
       ],
     },
     resolve: {
